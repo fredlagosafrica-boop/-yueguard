@@ -158,3 +158,5 @@ contentData.categories.push({
     }
   ]
 });
+
+onChunkLoaded();
