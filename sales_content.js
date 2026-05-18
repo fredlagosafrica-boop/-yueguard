@@ -62,7 +62,7 @@ contentData.categories.push({
     // =====================
     {
       id: '2-sales-process',
-      name: '2：进阶销售全流程实操',
+      name: '2：客群调研',
       children: [
         // ---- 2.1 前期筹备（5篇）----
         {
@@ -153,7 +153,7 @@ contentData.categories.push({
         // ---- 2.2 精准获客（5篇）----
         {
           id: '2-2-acquisition',
-          name: '2.2 精准获客（5篇）',
+          name: '5：精准获客',
           children: [
             {
               id: '2-2-1-core',
@@ -215,7 +215,7 @@ contentData.categories.push({
         // ---- 2.3 深度需求挖掘 ----
         {
           id: '2-3-demand',
-          name: '2.3 深度需求挖掘',
+          name: '6：深度需求挖掘',
           children: [
             {
               id: '2-3-1-core',
@@ -269,7 +269,7 @@ contentData.categories.push({
         // ---- 2.4 方案呈现与专业讲解（5篇）----
         {
           id: '2-4-presentation',
-          name: '2.4 方案呈现与专业讲解（5篇）',
+          name: '7：方案呈现与专业讲解',
           children: [
             {
               id: '2-4-1-core',
@@ -324,7 +324,7 @@ contentData.categories.push({
         // ---- 2.5 异议处理（6篇）----
         {
           id: '2-5-objection',
-          name: '2.5 异议处理（6篇）',
+          name: '8：异议处理',
           children: [
             {
               id: '2-5-1-core',
