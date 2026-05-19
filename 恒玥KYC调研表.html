@@ -223,10 +223,69 @@
       </div>
     </div>
 
-    <!-- 一.5 已购保险 -->
+    <!-- ①.5 健康状况 -->
     <div class="section">
       <div class="section-title">
-        <div class="section-icon" style="background:#9b59b6;">①.5</div>
+        <div class="section-icon" style="background:#e0573e;">①.5</div>
+        <div class="section-name">健康状况</div>
+        <div class="section-en">HEALTH STATUS</div>
+      </div>
+      <div class="info-card">
+        <div class="grid-3" style="gap: 12px;">
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">吸烟习惯</div>
+            <div class="tag-group" data-field="smoking">
+              <span class="tag selected">不吸烟</span>
+              <span class="tag">偶尔吸烟</span>
+              <span class="tag">经常吸烟</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">饮酒习惯</div>
+            <div class="tag-group" data-field="drinking">
+              <span class="tag selected">不饮酒</span>
+              <span class="tag">偶尔饮酒</span>
+              <span class="tag">经常饮酒</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">体检状况</div>
+            <div class="tag-group" data-field="checkup">
+              <span class="tag selected">每年定期</span>
+              <span class="tag">偶尔体检</span>
+              <span class="tag">很少体检</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">既往病史</div>
+            <div class="tag-group" data-field="illness">
+              <span class="tag selected">无</span>
+              <span class="tag">有</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">家族病史</div>
+            <div class="tag-group" data-field="familyIll">
+              <span class="tag selected">无</span>
+              <span class="tag">有</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:#6b7c93; margin-bottom:8px;">身体质量指数</div>
+            <div class="tag-group" data-field="bmi">
+              <span class="tag selected">正常</span>
+              <span class="tag">偏瘦</span>
+              <span class="tag">偏胖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ①.7 已购保险 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-icon" style="background:#9b59b6;">①.7</div>
         <div class="section-name">已购保险品类</div>
         <div class="section-en">EXISTING COVERAGE</div>
       </div>
@@ -831,7 +890,9 @@
           t.textContent === '教育金' || t.textContent === '银行存款' || t.textContent === '焦虑' ||
           t.textContent === '5-10年' || t.textContent === '人民币' || t.textContent === '企业高管' ||
           t.textContent === '已婚无子女' || t.textContent === '未婚' ||
-          t.textContent === '无' || t.textContent === '男') {
+          t.textContent === '无' || t.textContent === '男' ||
+          t.textContent === '不吸烟' || t.textContent === '不饮酒' ||
+          t.textContent === '每年定期' || t.textContent === '正常') {
         t.classList.add('selected');
       } else {
         t.classList.remove('selected');
