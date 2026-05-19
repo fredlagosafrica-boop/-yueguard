@@ -831,30 +831,97 @@
     badge.textContent = `综合评级：${overallGrade} 类 · ${overallText}`;
     badge.style.background = badgeColor;
 
-    // ===== 产品推荐 =====
+    // ===== 产品推荐（香港保险产品库）=====
+    const hkProducts = {
+      savings: [
+        { name: '友邦「充裕未来·盈尚」', company: 'AIA', minAmount: 2, currency: ['美元', '港币', '多元'], goals: ['教育金', '养老储备', '财富传承', '资产保值'] },
+        { name: '安盛「跃进」', company: 'AXA', minAmount: 2, currency: ['美元', '港币', '多元'], goals: ['教育金', '养老储备', '财富传承', '资产保值'] },
+        { name: '宏利「丰誉传承」', company: 'Manulife', minAmount: 2, currency: ['美元', '港币'], goals: ['教育金', '养老储备', '资产保值'] },
+        { name: '保诚「隽富多元货币」', company: 'Prudential', minAmount: 2, currency: ['美元', '港币', '多元'], goals: ['教育金', '养老储备', '财富传承', '资产保值'] },
+        { name: '万通「富饶传承」', company: 'YFLife', minAmount: 1.5, currency: ['美元', '人民币', '港币', '多元'], goals: ['养老储备', '财富传承', '资产保值'] },
+        { name: '富通「匠心传承」', company: 'FTLife', minAmount: 2, currency: ['美元', '港币', '多元'], goals: ['教育金', '养老储备', '资产保值'] },
+      ],
+      criticalIllness: [
+        { name: '友邦「加裕智倍保3」', company: 'AIA', currency: ['美元', '港币', '人民币'] },
+        { name: '安盛「爱护同行加强版」', company: 'AXA', currency: ['美元', '港币'] },
+        { name: '保诚「危疾全护保2」', company: 'Prudential', currency: ['美元', '港币'] },
+        { name: '宏利「活耀人生2」', company: 'Manulife', currency: ['美元', '港币'] },
+        { name: '富通「守护168」', company: 'FTLife', currency: ['美元', '港币', '人民币'] },
+      ],
+      medical: [
+        { name: '友邦「亚洲至尊2」', company: 'AIA', level: '高端' },
+        { name: '安盛「寰宇特选2」', company: 'AXA', level: '高端' },
+        { name: '保诚「终身保医疗」', company: 'Prudential', level: '中端' },
+        { name: '宏利「全球安心」', company: 'Manulife', level: '中端' },
+        { name: '万通「超值医疗」', company: 'YFLife', level: '基础' },
+      ],
+      life: [
+        { name: '友邦「易达终身保」', company: 'AIA', type: '终身寿险' },
+        { name: '安盛「万用寿险」', company: 'AXA', type: '万用险' },
+        { name: '保诚「美好人生2」', company: 'Prudential', type: '终身寿险' },
+        { name: '宏利「永明寿险」', company: 'Manulife', type: '终身寿险' },
+      ],
+      annuity: [
+        { name: '友邦「悠然自逸」', company: 'AIA' },
+        { name: '安盛「赏丰盛」', company: 'AXA' },
+        { name: '宏利「岁岁享」', company: 'Manulife' },
+        { name: '万通「扣税年金」', company: 'YFLife' },
+      ]
+    };
+
     let products = [];
-    if (needMedical >= 2 || needCritical >= 2) products.push({ text: '高端医疗险', level: needMedical >= 3 || needCritical >= 3 ? 'high' : 'mid' });
-    if (needSavings >= 2) {
-      if (currencyPref.includes('美元') || currencyPref.includes('多元')) {
-        products.push({ text: '美金储蓄分红险', level: 'high' });
+    // 医疗险 + 重疾险推荐
+    if (needMedical >= 2 || needCritical >= 2) {
+      if (needMedical >= 3) {
+        const med = hkProducts.medical.filter(p => p.level === '高端');
+        if (med.length) products.push({ text: med[0].name, company: med[0].company, level: 'high', category: '高端医疗' });
       } else {
-        products.push({ text: '储蓄分红险', level: 'mid' });
+        const med = hkProducts.medical.filter(p => p.level === '中端');
+        if (med.length) products.push({ text: med[0].name, company: med[0].company, level: 'mid', category: '中端医疗' });
+      }
+      const ci = hkProducts.criticalIllness.slice(0, 2);
+      ci.forEach(p => products.push({ text: p.name, company: p.company, level: needCritical >= 3 ? 'high' : 'mid', category: '重疾险' }));
+    }
+    // 储蓄险推荐
+    if (needSavings >= 2) {
+      const matchedSavings = hkProducts.savings.filter(p => {
+        const currencyMatch = currencyPref.includes('美元') ? (p.currency.includes('美元')) :
+                             currencyPref.includes('港币') ? (p.currency.includes('港币')) :
+                             currencyPref.includes('人民币') ? (p.currency.includes('人民币')) : true;
+        return currencyMatch;
+      });
+      if (matchedSavings.length) {
+        products.push({ text: matchedSavings[0].name, company: matchedSavings[0].company, level: 'high', category: '储蓄分红' });
       }
     }
+    // 传承/万用寿险
     if (savingGoal.includes('传承') || age > 40) {
-      products.push({ text: '万用寿险（传承型）', level: 'high' });
+      const life = hkProducts.life.filter(p => p.type === '万用险');
+      if (life.length) products.push({ text: life[0].name, company: life[0].company, level: 'high', category: '万用寿险' });
     }
+    // 年金险
     if (savingGoal.includes('养老') || age > 35) {
-      products.push({ text: '年金险/养老计划', level: 'mid' });
+      const ann = hkProducts.annuity.slice(0, 1);
+      if (ann.length) products.push({ text: ann[0].name, company: ann[0].company, level: 'mid', category: '年金险' });
     }
+    // 定期寿险（家庭支柱）
     if (needLife >= 2 && familyRole === '家庭支柱') {
-      products.push({ text: '定期寿险', level: 'high' });
+      products.push({ text: '定期寿险（消费型）', company: '多家保险公司', level: 'high', category: '定期寿险' });
     }
-    if (needAccident >= 2) products.push({ text: '意外险', level: 'mid' });
-    if (products.length === 0) products.push({ text: '基础保障组合', level: 'low' });
+    // 意外险
+    if (needAccident >= 2) products.push({ text: '综合意外险', company: 'AIA/安盛', level: 'mid', category: '意外险' });
+    if (products.length === 0) products.push({ text: '基础保障组合', company: '待定', level: 'low', category: '' });
+
+    // 去重
+    const seen = new Set();
+    products = products.filter(p => {
+      if (seen.has(p.text)) return false;
+      seen.add(p.text);
+      return true;
+    });
 
     const productHtml = products.map(p =>
-      `<span class="tag-recommend ${p.level}">${p.level === 'high' ? '⭐' : p.level === 'mid' ? '◆' : '○'} ${p.text}</span>`
+      `<span class="tag-recommend ${p.level}">${p.level === 'high' ? '⭐' : p.level === 'mid' ? '◆' : '○'} ${p.text} <span style="font-size:11px;opacity:0.7">(${p.company})</span></span>`
     ).join('');
     document.getElementById('productRecommend').innerHTML = productHtml;
 
