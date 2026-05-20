@@ -21,7 +21,7 @@ function onChunkLoaded() {
 // ─── 动态加载 content chunks（根目录，无chunks/前缀）────
 var scripts = [
   'ifa_content.js?v=20260516',
-  'wiki_content.js?v=20260516',
+  'wiki_content.js?v=2026052020',
   'sales_content.js?v=2026052025',
   'referral_content.js?v=20260516',
   'materials_content.js?v=20260516',
