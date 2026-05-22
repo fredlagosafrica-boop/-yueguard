@@ -5,7 +5,7 @@
 const contentData = { categories: [] };
 
 let loadedChunks = 0;
-const totalChunks = 6;
+const totalChunks = 7;
 
 // 视图堆栈：追踪完整导航路径
 // 每个条目: { view: 'home'|'category'|'child'|'doc', catId, childId, itemId }
@@ -20,12 +20,13 @@ function onChunkLoaded() {
 
 // ─── 动态加载 content chunks（根目录，无chunks/前缀）────
 var scripts = [
-  'ifa_content.js?v=20260516',
-  'wiki_content.js?v=2026052020',
-  'sales_content.js?v=2026052025',
-  'referral_content.js?v=20260516',
-  'materials_content.js?v=20260516',
-  'chatbot_content.js?v=20260516',
+  'ifa_content.js',
+  'wiki_content.js',
+  'sales_content.js',
+  'referral_content.js',
+  'materials_content.js',
+  'chatbot_content.js',
+  'biyuan_content.js',
 ];
 
 function loadScript(i) {
@@ -59,16 +60,10 @@ function handleSearch(keyword) {
   var results = [];
   
   // 遍历所有分类、子类、内容项进行搜索
-  if (!contentData || !contentData.categories || contentData.categories.length === 0) {
-    resultsContainer.innerHTML = '<div class="search-no-result">内容加载中，请稍候...</div>';
-    resultsContainer.classList.add('active');
-    return;
-  }
-  
   contentData.categories.forEach(function(cat) {
     // 匹配分类名
     if (cat.name && cat.name.toLowerCase().includes(keyword)) {
-      results.push({ type: 'category', cat: cat.name, catId: cat.id, title: cat.name, item: cat });
+      results.push({ type: 'category', cat: cat.name, title: cat.name, item: cat });
     }
     // 匹配子类
     if (cat.children) {
@@ -76,71 +71,13 @@ function handleSearch(keyword) {
         if (child.name && child.name.toLowerCase().includes(keyword)) {
           results.push({ type: 'child', cat: cat.name, title: child.name, item: child, catId: cat.id });
         }
-        // 匹配直接挂在 child 下的 items（如 flat 类内容库）
-        if (child.items) {
-          child.items.forEach(function(it) {
-            var matchTitle = it.name && it.name.toLowerCase().includes(keyword);
-            var matchContent = it.content && it.content.toLowerCase().includes(keyword);
-            if (matchTitle || matchContent) {
-              results.push({ type: 'item', cat: cat.name, title: it.name || it.title || '未命名', item: it, catId: cat.id, childId: child.id, matchContent: matchContent ? it.content : null });
-            }
-          });
-        }
-        // 匹配子子分类 child.children（递归查到底）
+        // 匹配内容项
         if (child.children) {
           child.children.forEach(function(sub) {
             var matchTitle = sub.name && sub.name.toLowerCase().includes(keyword);
             var matchContent = sub.content && sub.content.toLowerCase().includes(keyword);
             if (matchTitle || matchContent) {
               results.push({ type: 'item', cat: cat.name, title: sub.name || sub.title || '未命名', item: sub, catId: cat.id, childId: child.id, matchContent: matchContent ? sub.content : null });
-            }
-            // 递归：sub 也可能有 items 或更深层 children
-            if (sub.items) {
-              sub.items.forEach(function(it) {
-                var mT = it.name && it.name.toLowerCase().includes(keyword);
-                var mC = it.content && it.content.toLowerCase().includes(keyword);
-                if (mT || mC) {
-                  results.push({ type: 'item', cat: cat.name, title: it.name || it.title || '未命名', item: it, catId: cat.id, childId: child.id, matchContent: mC ? it.content : null });
-                }
-              });
-            }
-            if (sub.children) {
-              sub.children.forEach(function(sub2) {
-                var mT2 = sub2.name && sub2.name.toLowerCase().includes(keyword);
-                var mC2 = sub2.content && sub2.content.toLowerCase().includes(keyword);
-                if (mT2 || mC2) {
-                  results.push({ type: 'item', cat: cat.name, title: sub2.name || sub2.title || '未命名', item: sub2, catId: cat.id, childId: child.id, matchContent: mC2 ? sub2.content : null });
-                }
-                // 第四层
-                if (sub2.items) {
-                  sub2.items.forEach(function(it2) {
-                    var mT3 = it2.name && it2.name.toLowerCase().includes(keyword);
-                    var mC3 = it2.content && it2.content.toLowerCase().includes(keyword);
-                    if (mT3 || mC3) {
-                      results.push({ type: 'item', cat: cat.name, title: it2.name || it2.title || '未命名', item: it2, catId: cat.id, childId: child.id, matchContent: mC3 ? it2.content : null });
-                    }
-                  });
-                }
-                if (sub2.children) {
-                  sub2.children.forEach(function(sub3) {
-                    var mT3 = sub3.name && sub3.name.toLowerCase().includes(keyword);
-                    var mC3 = sub3.content && sub3.content.toLowerCase().includes(keyword);
-                    if (mT3 || mC3) {
-                      results.push({ type: 'item', cat: cat.name, title: sub3.name || sub3.title || '未命名', item: sub3, catId: cat.id, childId: child.id, matchContent: mC3 ? sub3.content : null });
-                    }
-                    // 第五层（安全兜底）
-                    if (sub3.items) {
-                      sub3.items.forEach(function(it3) {
-                        var mT4 = it3.name && it3.name.toLowerCase().includes(keyword);
-                        var mC4 = it3.content && it3.content.toLowerCase().includes(keyword);
-                        if (mT4 || mC4) {
-                          results.push({ type: 'item', cat: cat.name, title: it3.name || it3.title || '未命名', item: it3, catId: cat.id, childId: child.id, matchContent: mC4 ? it3.content : null });
-                        }
-                      });
-                    }
-                  });
-                }
-              });
             }
           });
         }
@@ -165,7 +102,7 @@ function handleSearch(keyword) {
           snippet = snippet.replace(new RegExp(keyword, 'gi'), '<mark>$&</mark>');
         }
       }
-      return '<div class="search-result-item" data-type="' + r.type + '" data-cat="' + (r.catId || '') + '" data-child="' + (r.childId || '') + '" data-itemid="' + (r.item.id || '') + '" data-title="' + encodeURIComponent(r.title) + '">' +
+      return '<div class="search-result-item" data-type="' + r.type + '" data-cat="' + (r.catId || '') + '" data-child="' + (r.childId || '') + '" data-title="' + encodeURIComponent(r.title) + '">' +
         '<div class="result-cat">' + r.cat + ' ' + (r.type === 'category' ? '(分类)' : r.type === 'child' ? '(子分类)' : '(内容)') + '</div>' +
         '<div class="result-title">' + r.title + '</div>' +
         (snippet ? '<div class="result-snippet">' + snippet + '</div>' : '') + '</div>';
@@ -180,22 +117,30 @@ function handleSearch(keyword) {
       var type = this.getAttribute('data-type');
       var catId = this.getAttribute('data-cat');
       var childId = this.getAttribute('data-child');
-      var itemId = this.getAttribute('data-itemid');
       var title = decodeURIComponent(this.getAttribute('data-title'));
-      openSearchResult(type, catId, childId, title, itemId);
+      openSearchResult(type, catId, childId, title);
     };
   });
 }
 
-function openSearchResult(type, catId, childId, title, itemId) {
+function openSearchResult(type, catId, childId, title) {
   var resultsContainer = document.getElementById('searchResults');
   if (resultsContainer) resultsContainer.classList.remove('active');
   document.getElementById('searchInput').value = '';
   
   if (type === 'category') {
-    var cat = catId ? contentData.categories.find(function(c) { return c.id === catId; }) : null;
-    if (!cat) cat = contentData.categories.find(function(c) { return c.name === title; });
-    if (cat) showCategory(cat);
+    var cat = contentData.categories.find(function(c) { return c.name === title; });
+    if (cat) {
+      showCategory(cat);
+    } else {
+      // fallback: 遍历找
+      for (var i = 0; i < contentData.categories.length; i++) {
+        if (contentData.categories[i].name === title) {
+          showCategory(contentData.categories[i]);
+          break;
+        }
+      }
+    }
   } else if (type === 'child') {
     var cat = contentData.categories.find(function(c) { return c.id === catId; });
     if (cat) {
@@ -203,9 +148,13 @@ function openSearchResult(type, catId, childId, title, itemId) {
       if (child) showChild(cat, child);
     }
   } else if (type === 'item') {
-    // 搜索结果点击 → 直接用 itemId 跳转到文章页
-    if (itemId) {
-      showDoc(catId, childId, itemId);
+    var cat2 = contentData.categories.find(function(c) { return c.id === catId; });
+    if (cat2) {
+      var child2 = cat2.children.find(function(c) { return c.id === childId; });
+      if (child2) {
+        var item = child2.children.find(function(i) { return (i.name || i.title) === title; });
+        if (item) showChild(cat2, child2, item.id);
+      }
     }
   }
 }
@@ -271,7 +220,7 @@ function updateBreadcrumb() {
   var breadcrumb = document.getElementById('breadcrumb');
   if (!breadcrumb) return;
 
-  var html = '<span class="breadcrumb-item" onclick="goHome()">首页</span>';
+  var html = '<span class="breadcrumb-item" onclick="restoreToIndex(0)">首页</span>';
 
   for (var i = 1; i < viewStack.length; i++) {
     var v = viewStack[i];
@@ -302,14 +251,13 @@ function updateBreadcrumb() {
   }
 
   breadcrumb.innerHTML = html;
-  console.log('[updateBreadcrumb] html=', html);
 }
 
 function updateBreadcrumbDocOnly(cat, child, item) {
   var breadcrumb = document.getElementById('breadcrumb');
   if (!breadcrumb) return;
 
-  var html = '<span class="breadcrumb-item" onclick="goHome()">首页</span>';
+  var html = '<span class="breadcrumb-item" onclick="restoreToIndex(0)">首页</span>';
 
   for (var i = 1; i < viewStack.length; i++) {
     var v = viewStack[i];
@@ -397,14 +345,13 @@ function restoreCategory(cat) {
   updateBreadcrumb();
 }
 
-function showChild(cat, child, itemIdToShow) {
+function showChild(cat, child) {
   var contentArea = document.getElementById('contentArea');
   var detailArea = document.getElementById('detailArea');
   if (!contentArea || !detailArea) return;
 
   contentArea.style.display = 'none';
   detailArea.style.display = 'block';
-  window.scrollTo(0, 0);
 
   var docTitle = document.getElementById('docTitle');
   var docContent = document.getElementById('docContent');
@@ -415,20 +362,7 @@ function showChild(cat, child, itemIdToShow) {
   viewStack.push({ view: 'child', catId: cat.id, childId: child.id });
   updateBreadcrumb();
 
-  // 如果传入了 itemIdToShow，直接跳转到文章
-  if (itemIdToShow) {
-    showDoc(cat.id, child.id, itemIdToShow);
-    return;
-  }
-
-  // 如果没有 children（叶子节点），直接显示内容
-  if (!child.children || child.children.length === 0) {
-    showDoc(cat.id, child.id, child.id);
-    return;
-  }
-
   // 构建子项列表，支持第3层有children的情况
-  console.log('[showChild] 开始渲染子目录列表，清空docContent');
   var html = '<div class="child-items-list">';
   child.children.forEach(function(item) {
     // 提取内容摘要（如果有content字段）
@@ -453,16 +387,12 @@ function showChild(cat, child, itemIdToShow) {
       html += '<div class="child-item" onclick="showDoc(\'' + cat.id + '\',\'' + child.id + '\',\'' + item.id + '\')">' +
         '<span class="child-item-title">' + (item.name || item.title) + '</span><span class="child-item-arrow">›</span></div>';
       if (snippetHtml) {
-        var lastItem = html.lastIndexOf('<div class="child-item"');
-        var insertPos = html.indexOf('</div>', lastItem) + 6;
-        html = html.slice(0, insertPos) + snippetHtml.replace('class="child-item-snippet"', 'class="child-item-snippet child-snippet-inline"') + html.slice(insertPos);
+        html = html.replace(/(<div class="child-item"[^>]* onclick="showDoc[^"]+">)/, '$1' + snippetHtml.replace('class="child-item-snippet"', 'class="child-item-snippet child-snippet-inline"'));
       }
     }
   });
   html += '</div>';
-  docContent.innerHTML = ''; // 强制清空
   docContent.innerHTML = html;
-  console.log('[showChild] 渲染完成，innerHTML已设置');
 }
 
 // 展开第4层子节点（点击有children的第3层节点时触发）
@@ -482,13 +412,11 @@ function restoreChild(cat, child) {
 
   contentArea.style.display = 'none';
   detailArea.style.display = 'block';
-  window.scrollTo(0, 0);
 
   var docTitle = document.getElementById('docTitle');
   var docContent = document.getElementById('docContent');
   if (docTitle) docTitle.textContent = cat.name + ' - ' + child.name;
   if (docContent) {
-    docContent.innerHTML = ''; // 先清空旧内容
     var html = '<div class="child-items-list">';
     child.children.forEach(function(item) {
       if (item.children && item.children.length > 0) {
@@ -513,54 +441,24 @@ function restoreChild(cat, child) {
 }
 
 function showDoc(catId, childId, itemId) {
-  console.log('[DEBUG showDoc] catId:', catId, 'childId:', childId, 'itemId:', itemId);
-  console.log('[DEBUG showDoc] REFERRAL_UPDATES["ref-4-2-3"]?', !!window.REFERRAL_UPDATES && !!window.REFERRAL_UPDATES['ref-4-2-3']);
   var cat = contentData.categories.find(function(c) { return c.id === catId; });
-  if (!cat) { console.log('[DEBUG showDoc] cat not found!'); return; }
+  if (!cat) return;
 
-  // 递归搜索：支持任意深度的 children + items 混合查找（含稀疏数组防护）
-  function findItemDeep(nodes, targetId) {
-    if (!nodes) return null;
-    for (var i = 0; i < nodes.length; i++) {
-      if (!nodes[i]) continue; // 稀疏数组防护，跳过 undefined/null 空位
-      if (nodes[i].id === targetId) return nodes[i];
-      // items 数组里的直接项目（如 flat 结构）
-      if (nodes[i].items) {
-        for (var j = 0; j < nodes[i].items.length; j++) {
-          if (nodes[i].items[j] && nodes[i].items[j].id === targetId) return nodes[i].items[j];
-        }
-      }
-      // children 嵌套
-      if (nodes[i].children) {
-        var found = findItemDeep(nodes[i].children, targetId);
+  // 递归搜索：支持任意深度的 children 查找
+  function findItem(children, targetId) {
+    if (!children) return null;
+    for (var i = 0; i < children.length; i++) {
+      if (children[i].id === targetId) return children[i];
+      if (children[i].children) {
+        var found = findItem(children[i].children, targetId);
         if (found) return found;
       }
     }
     return null;
   }
 
-  var item = findItemDeep(cat.children, itemId);
+  var item = findItem(cat.children, itemId);
   if (!item) return;
-
-  // 热补丁：优先用 referral_update.js 里的更新内容（即使有 children 也优先显示补丁内容）
-  if (window.REFERRAL_UPDATES && window.REFERRAL_UPDATES[itemId]) {
-    console.log('[DEBUG showDoc] HOT PATCH APPLIED for itemId:', itemId);
-    var rawContent = window.REFERRAL_UPDATES[itemId];
-    // 显示详情区，隐藏分类列表区
-    var categoryGrid = document.getElementById('categoryGrid');
-    var contentArea = document.getElementById('contentArea');
-    var detailArea = document.getElementById('detailArea');
-    if (categoryGrid) categoryGrid.style.display = 'none';
-    if (contentArea) contentArea.style.display = 'none';
-    if (detailArea) detailArea.style.display = 'block';
-    var docContent = document.getElementById('docContent');
-    if (docContent) docContent.innerHTML = '<div class="doc-view">' + rawContent + '</div>';
-    var docTitle = document.getElementById('docTitle');
-    if (docTitle) docTitle.textContent = item.name || item.title || '';
-    viewStack.push({ view: 'doc', catId: catId, childId: itemId, itemId: itemId });
-    updateBreadcrumb();
-    return;
-  }
 
   // 有 children 的项目 → 调用 showChild 显示子项目列表
   if (item.children && item.children.length > 0) {
@@ -568,18 +466,10 @@ function showDoc(catId, childId, itemId) {
     return;
   }
 
-  // 显示详情区，隐藏分类列表区
-  var categoryGrid = document.getElementById('categoryGrid');
-  var contentArea = document.getElementById('contentArea');
-  var detailArea = document.getElementById('detailArea');
-  if (categoryGrid) categoryGrid.style.display = 'none';
-  if (contentArea) contentArea.style.display = 'none';
-  if (detailArea) detailArea.style.display = 'block';
-
   var docContent = document.getElementById('docContent');
   if (docContent) {
-    docContent.innerHTML = ''; // 先清空旧内容
-    rawContent = item.content || '<p>内容待补充...</p>';
+    var rawContent = item.content || '<p>内容待补充...</p>';
+    // 如果有搜索关键词，对内容进行高亮处理
     if (lastSearchKeyword) {
       rawContent = rawContent.replace(new RegExp(lastSearchKeyword, 'gi'), '<mark class="search-highlight">$&</mark>');
     }
@@ -591,7 +481,6 @@ function showDoc(catId, childId, itemId) {
 
   viewStack.push({ view: 'doc', catId: catId, childId: itemId, itemId: itemId });
   updateBreadcrumb();
-  window.scrollTo(0, 0); // 每次进入文章都滚动到顶部
   
   // 如果有高亮内容，滚动到第一个高亮位置
   if (lastSearchKeyword) {
@@ -608,20 +497,13 @@ function goHome() {
   var navArea = document.getElementById('navArea');
   var contentArea = document.getElementById('contentArea');
   var detailArea = document.getElementById('detailArea');
-  var categoryGrid = document.getElementById('categoryGrid');
   if (navArea) navArea.style.display = 'block';
-  if (categoryGrid) categoryGrid.style.display = 'grid';
   if (contentArea) contentArea.style.display = 'none';
   if (detailArea) detailArea.style.display = 'none';
 
   viewStack = [{ view: 'home' }];
   updateBreadcrumb();
   renderCategories();
-
-  // DEBUG
-  console.log('[goHome] navArea.display=' + (navArea ? navArea.style.display : 'null') +
-    ' categoryGrid.display=' + (categoryGrid ? categoryGrid.style.display : 'null') +
-    ' contentArea.display=' + (contentArea ? contentArea.style.display : 'null'));
 }
 
 function goBack() {
