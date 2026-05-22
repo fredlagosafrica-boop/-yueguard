@@ -404,6 +404,7 @@ function showChild(cat, child, itemIdToShow) {
 
   contentArea.style.display = 'none';
   detailArea.style.display = 'block';
+  window.scrollTo(0, 0);
 
   var docTitle = document.getElementById('docTitle');
   var docContent = document.getElementById('docContent');
@@ -476,11 +477,13 @@ function restoreChild(cat, child) {
 
   contentArea.style.display = 'none';
   detailArea.style.display = 'block';
+  window.scrollTo(0, 0);
 
   var docTitle = document.getElementById('docTitle');
   var docContent = document.getElementById('docContent');
   if (docTitle) docTitle.textContent = cat.name + ' - ' + child.name;
   if (docContent) {
+    docContent.innerHTML = ''; // 先清空旧内容
     var html = '<div class="child-items-list">';
     child.children.forEach(function(item) {
       if (item.children && item.children.length > 0) {
@@ -570,6 +573,7 @@ function showDoc(catId, childId, itemId) {
 
   var docContent = document.getElementById('docContent');
   if (docContent) {
+    docContent.innerHTML = ''; // 先清空旧内容
     rawContent = item.content || '<p>内容待补充...</p>';
     if (lastSearchKeyword) {
       rawContent = rawContent.replace(new RegExp(lastSearchKeyword, 'gi'), '<mark class="search-highlight">$&</mark>');
@@ -582,6 +586,7 @@ function showDoc(catId, childId, itemId) {
 
   viewStack.push({ view: 'doc', catId: catId, childId: itemId, itemId: itemId });
   updateBreadcrumb();
+  window.scrollTo(0, 0); // 每次进入文章都滚动到顶部
   
   // 如果有高亮内容，滚动到第一个高亮位置
   if (lastSearchKeyword) {
