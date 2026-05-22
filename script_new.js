@@ -452,7 +452,9 @@ function showChild(cat, child, itemIdToShow) {
       html += '<div class="child-item" onclick="showDoc(\'' + cat.id + '\',\'' + child.id + '\',\'' + item.id + '\')">' +
         '<span class="child-item-title">' + (item.name || item.title) + '</span><span class="child-item-arrow">›</span></div>';
       if (snippetHtml) {
-        html = html.replace(/(<div class="child-item"[^>]* onclick="showDoc[^"]+">)/, '$1' + snippetHtml.replace('class="child-item-snippet"', 'class="child-item-snippet child-snippet-inline"'));
+        var lastItem = html.lastIndexOf('<div class="child-item"');
+        var insertPos = html.indexOf('</div>', lastItem) + 6;
+        html = html.slice(0, insertPos) + snippetHtml.replace('class="child-item-snippet"', 'class="child-item-snippet child-snippet-inline"') + html.slice(insertPos);
       }
     }
   });
