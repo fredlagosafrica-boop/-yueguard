@@ -53,6 +53,17 @@ contentData.categories.push({
           content: '<h2>LifeBee APP 操作说明</h2><p>恒玥团队专用APP操作指引文档，支持团队日常业务管理。</p><p style="margin-top:20px;"><a href="assets/LifeBee_APP操作説明.pdf" target="_blank" style="display:inline-block;background:#c9a84c;color:#0a1628;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:bold;">📥 下载PDF完整版</a></p><p style="margin-top:15px;color:#888;font-size:14px;">文件大小：9.4MB，共33页</p>' 
         }
       ]
+    },
+    {
+      id: 'content06',
+      name: '3.6 ZUU直营新人行政手册',
+      children: [
+        { 
+          id: 'content06a', 
+          title: 'ZUU直营新人行政手册', 
+          content: '<h2>ZUU直营新人行政手册</h2><p>ZUU直营新人入职行政手册，包含入职流程、行政指引及日常操作规范。</p><p style="margin-top:20px;"><a href="assets/ZUU直营新人行政手册.pdf" target="_blank" style="display:inline-block;background:#c9a84c;color:#0a1628;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:bold;">📥 下载PDF完整版</a></p><p style="margin-top:15px;color:#888;font-size:14px;">文件大小：15MB</p>' 
+        }
+      ]
     }
   ]
 });
