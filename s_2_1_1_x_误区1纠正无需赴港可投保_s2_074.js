@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_074",
+  id: "s_s2_074",
   title: "误区1纠正（无需赴港可投保）",
   type: "leaf",
   parent: "s_s_2_1_1",

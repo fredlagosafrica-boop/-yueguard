@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_048",
+  id: "s_s2_048",
   title: "案例2：全球医疗理赔（跨境留学客群）",
   type: "leaf",
   parent: "s_s_2_1_1",

@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_053",
+  id: "s_s2_053",
   title: "个人专业资质背书（核心必备）",
   type: "leaf",
   parent: "s_s_2_1_1",

@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_051",
+  id: "s_s2_051",
   title: "官方核心合规提示（原文摘录+解读）",
   type: "leaf",
   parent: "s_s_2_1_1",

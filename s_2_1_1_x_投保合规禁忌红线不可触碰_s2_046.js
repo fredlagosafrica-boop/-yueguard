@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_046",
+  id: "s_s2_046",
   title: "投保合规禁忌（红线不可触碰）",
   type: "leaf",
   parent: "s_s_2_1_1",

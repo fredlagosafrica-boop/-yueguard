@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_043",
+  id: "s_s2_043",
   title: "分客群港险产品对比表（精准匹配，一目了然）",
   type: "leaf",
   parent: "s_s_2_1_1",

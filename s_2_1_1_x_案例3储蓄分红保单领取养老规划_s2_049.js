@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_049",
+  id: "s_s2_049",
   title: "案例3：储蓄分红保单领取（养老规划客群）",
   type: "leaf",
   parent: "s_s_2_1_1",

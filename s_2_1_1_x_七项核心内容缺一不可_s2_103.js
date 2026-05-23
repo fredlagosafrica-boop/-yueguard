@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_103",
+  id: "s_s2_103",
   title: "七项核心内容（缺一不可）",
   type: "leaf",
   parent: "s_s_2_1_1",

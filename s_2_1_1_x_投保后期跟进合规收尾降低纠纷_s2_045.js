@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_045",
+  id: "s_s2_045",
   title: "投保后期跟进（合规收尾，降低纠纷）",
   type: "leaf",
   parent: "s_s_2_1_1",

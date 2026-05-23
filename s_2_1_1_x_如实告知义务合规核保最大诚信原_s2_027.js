@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_027",
+  id: "s_s2_027",
   title: "如实告知义务合规（核保最大诚信原则）",
   type: "leaf",
   parent: "s_s_2_1_1",

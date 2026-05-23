@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_035",
+  id: "s_s2_035",
   title: "对香港保险的认知程度",
   type: "leaf",
   parent: "s_s_2_1_1",

@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_023",
+  id: "s_s2_023",
   title: "官方核验路径与操作",
   type: "leaf",
   parent: "s_s_2_1_1",

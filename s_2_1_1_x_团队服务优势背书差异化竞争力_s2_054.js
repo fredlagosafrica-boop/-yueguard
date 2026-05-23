@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_054",
+  id: "s_s2_054",
   title: "团队服务优势背书（差异化竞争力）",
   type: "leaf",
   parent: "s_s_2_1_1",

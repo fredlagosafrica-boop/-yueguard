@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_075",
+  id: "s_s2_075",
   title: "误区2纠正（香港保险分红必达）",
   type: "leaf",
   parent: "s_s_2_1_1",

@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_129",
+  id: "s_s2_129",
   title: "差异化解答",
   type: "leaf",
   parent: "s_s_2_1_1",

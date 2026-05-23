@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_025",
+  id: "s_s2_025",
   title: "赴港投保硬性合规要求（缺一不可）",
   type: "leaf",
   parent: "s_s_2_1_1",

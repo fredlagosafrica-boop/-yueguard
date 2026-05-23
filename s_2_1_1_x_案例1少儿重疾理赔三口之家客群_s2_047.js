@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_047",
+  id: "s_s2_047",
   title: "案例1：少儿重疾理赔（三口之家客群）",
   type: "leaf",
   parent: "s_s_2_1_1",

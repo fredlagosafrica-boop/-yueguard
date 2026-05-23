@@ -1,6 +1,6 @@
 window.__CHUNKS__ = window.__CHUNKS__ || [];
 window.__CHUNKS__.push({
-  id: "s2_s2_044",
+  id: "s_s2_044",
   title: "投保前期准备（合规前置，避免遗漏）",
   type: "leaf",
   parent: "s_s_2_1_1",
