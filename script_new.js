@@ -22,7 +22,7 @@ function onChunkLoaded() {
 var scripts = [
   'ifa_content.js?v=2026052201',
   'wiki_content.js?v=2026052201',
-  'sales_content.js?v=2026052201',
+  'sales_content.js?v=2026052301',
   'referral_content.js?v=2026052201',
   'materials_content.js?v=2026052201',
   'chatbot_content.js?v=2026052201',
