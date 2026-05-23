@@ -441,3 +441,5 @@ contentData.categories.push({
     },
   ]
 });
+
+onChunkLoaded();
