@@ -113,30 +113,30 @@
 
 <script src="script_new.js?v=2026052415"></script>
 <script>
-// 密码哈希（SHA-256）
-// 🔒 请定期修改这里！改动后需同步更新到 script_new.js
+// 登录验证（内置 SHA-256，不依赖外部 CDN）
 var LOGIN_HASH = '2926a2731f4b312c08982cacf8061eb14bf65c1a87cc5d70e864e079c6220731'; // 8888
+
+function sha256(str) {
+  var a = new TextEncoder().encode(str);
+  return crypto.subtle.digest('SHA-256', a).then(function(b) {
+    return Array.from(new Uint8Array(b)).map(function(e) { return ('0' + e.toString(16)).slice(-2); }).join('');
+  });
+}
 
 function doLogin() {
   var pwd = document.getElementById('pwdInput').value;
-  var hash = '';
-  try {
-    hash = CryptoJS.SHA256(pwd).toString();
-  } catch(e) {
-    document.getElementById('loginError').textContent = '加载中，请重试';
-    document.getElementById('loginError').style.display = 'block';
-    return;
-  }
-  if (hash === LOGIN_HASH) {
-    sessionStorage.setItem('hengyu_logged_in', '1');
-    document.getElementById('loginScreen').style.display = 'none';
-    checkDisclaimer();
-  } else {
-    document.getElementById('loginError').textContent = '密码错误，请重试';
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('pwdInput').value = '';
-    document.getElementById('pwdInput').focus();
-  }
+  sha256(pwd).then(function(hash) {
+    if (hash === LOGIN_HASH) {
+      sessionStorage.setItem('hengyu_logged_in', '1');
+      document.getElementById('loginScreen').style.display = 'none';
+      checkDisclaimer();
+    } else {
+      document.getElementById('loginError').textContent = '密码错误，请重试';
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('pwdInput').value = '';
+      document.getElementById('pwdInput').focus();
+    }
+  });
 }
 
 function checkDisclaimer() {
@@ -155,26 +155,15 @@ function acceptDisclaimer() {
 
 function showApp() {
   document.getElementById('appContent').style.display = 'block';
-  // 初始化网站内容（原有脚本逻辑）
   if (typeof initApp === 'function') initApp();
 }
 
-// 页面加载时检查登录状态
 (function() {
-  // 先加载 CryptoJS
-  var script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js';
-  script.onload = function() {
-    if (sessionStorage.getItem('hengyu_logged_in') === '1') {
-      document.getElementById('loginScreen').style.display = 'none';
-      checkDisclaimer();
-    }
-  };
-  script.onerror = function() {
-    document.getElementById('loginError').textContent = 'CryptoJS加载失败，请检查网络';
-    document.getElementById('loginError').style.display = 'block';
-  };
-  document.head.appendChild(script);
+  // 检查登录状态
+  if (sessionStorage.getItem('hengyu_logged_in') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    checkDisclaimer();
+  }
 })();
 </script>
 </body>
