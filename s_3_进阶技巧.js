@@ -1,5 +1,5 @@
 // 🚀 进阶技巧
-// 生成时间: 2026-05-08  恒玥 Yuanguard
+// 生成时间: 2026-05-08  恒玥 YUEGUARD
 
 if (typeof contentData === 'undefined') var contentData = { categories: [] };
 contentData.categories.push({

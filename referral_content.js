@@ -1,5 +1,5 @@
 // referral_content.js - 港险渠道业务
-// 生成时间：2026-05-09 恒玥 Yuanguard
+// 生成时间：2026-05-09 恒玥 YUEGUARD
 
 contentData.categories.push({
   id: 'referral',

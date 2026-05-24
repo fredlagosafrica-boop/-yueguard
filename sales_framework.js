@@ -1,5 +1,5 @@
 // 进阶销售内容数据 - 框架版
-// 生成时间: 2026-05-08  恒玥 Yuanguard
+// 生成时间: 2026-05-08  恒玥 YUEGUARD
 // 用途：仅含分类框架结构，不含正文内容（叶子条目内容已清空）
 
 if (typeof contentData === 'undefined') var contentData = { categories: [] };
