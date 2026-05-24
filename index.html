@@ -124,8 +124,20 @@ function sha256(str) {
 }
 
 function doLogin() {
-  var pwd = document.getElementById('pwdInput').value;
+  var inputEl = document.getElementById('pwdInput');
+  if (!inputEl) {
+    console.error('pwdInput not found');
+    return;
+  }
+  var pwd = inputEl.value;
+  if (!pwd) {
+    document.getElementById('loginError').textContent = '请输入密码';
+    document.getElementById('loginError').style.display = 'block';
+    return;
+  }
   sha256(pwd).then(function(hash) {
+    console.log('Computed hash:', hash);
+    console.log('Expected hash:', LOGIN_HASH);
     if (hash === LOGIN_HASH) {
       sessionStorage.setItem('hengyu_logged_in', '1');
       document.getElementById('loginScreen').style.display = 'none';
@@ -133,8 +145,8 @@ function doLogin() {
     } else {
       document.getElementById('loginError').textContent = '密码错误，请重试';
       document.getElementById('loginError').style.display = 'block';
-      document.getElementById('pwdInput').value = '';
-      document.getElementById('pwdInput').focus();
+      inputEl.value = '';
+      inputEl.focus();
     }
   });
 }
