@@ -115,7 +115,7 @@
 <script>
 // 密码哈希（SHA-256）
 // 🔒 请定期修改这里！改动后需同步更新到 script_new.js
-var LOGIN_HASH = '6c3acc651a3e5bcee185053e562bf4cb7830589316342b78d18143f5aeb88d23'; // 8888
+var LOGIN_HASH = '2926a2731f4b312c08982cacf8061eb14bf65c1a87cc5d70e864e079c6220731'; // 8888
 
 function doLogin() {
   var pwd = document.getElementById('pwdInput').value;
@@ -123,7 +123,6 @@ function doLogin() {
   try {
     hash = CryptoJS.SHA256(pwd).toString();
   } catch(e) {
-    // Fallback if CryptoJS not loaded yet
     document.getElementById('loginError').textContent = '加载中，请重试';
     document.getElementById('loginError').style.display = 'block';
     return;
