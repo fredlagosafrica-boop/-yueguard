@@ -7,7 +7,33 @@
  <link rel="stylesheet" href="style.css">
 </head>
 <body>
- <div class="app-container">
+<!-- 免责声明弹窗 -->
+<div id="disclaimerModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:'Microsoft YaHei',sans-serif;">
+    <div style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;padding:20px 24px;border-radius:16px 16px 0 0;display:flex;align-items:center;">
+      <span style="font-size:24px;">📋</span>
+      <span style="font-size:18px;font-weight:600;margin-left:10px;">资料库使用声明及免责条款</span>
+    </div>
+    <div style="padding:24px;color:#333;line-height:1.8;font-size:14px;">
+      <p style="margin-bottom:12px;color:#1e40af;font-weight:600;font-size:15px;">知识产权声明</p>
+      <p style="margin-bottom:16px;text-align:justify;">本资料库所有内容版权归本机构所有，受相关知识产权法律法规保护。未经本机构书面授权，任何单位及个人不得擅自复制、转载、篡改、传播、商用或以其他方式使用资料库内容。</p>
+      <p style="margin-bottom:12px;color:#1e40af;font-weight:600;font-size:15px;">使用范围限制</p>
+      <p style="margin-bottom:16px;text-align:justify;">本资料库内容仅限香港地区合法持牌保险经纪人内部参考使用，严格禁止跨地域、超权限使用，亦不得向非合规人员、异地机构或第三方对外流转、分享资料内容。</p>
+      <p style="margin-bottom:12px;color:#1e40af;font-weight:600;font-size:15px;">免责条款</p>
+      <p style="margin-bottom:20px;text-align:justify;">资料库所有内容仅作业务参考用途，不构成任何保险投保建议、法律意见、专业决策依据。任何使用者因超范围使用、自行依据资料内容开展业务所产生的一切纠纷、损失及相关法律责任，均由使用者自行全额承担，本机构不承担任何连带法律责任与相关后果。</p>
+      <div style="background:#f0f9ff;border-left:4px solid #0284c7;padding:12px 16px;border-radius:0 8px 8px 0;font-size:13px;color:#0369a1;margin-bottom:16px;">如您使用本资料库，即表示已阅读、理解并同意上述全部条款。</div>
+    </div>
+    <div style="padding:0 24px 24px;text-align:center;">
+      <button onclick="acceptDisclaimer()" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border:none;padding:14px 48px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(2,132,199,0.3);font-family:'Microsoft YaHei',sans-serif;">我已知悉并同意</button>
+    </div>
+  </div>
+</div>
+<script>
+function checkDisclaimer(){if(!localStorage.getItem('disclaimerAccepted')){document.getElementById('disclaimerModal').style.display='flex';}}
+function acceptDisclaimer(){localStorage.setItem('disclaimerAccepted','1');document.getElementById('disclaimerModal').style.display='none';}
+checkDisclaimer();
+</script>
+<div class="app-container">
  <h1 class="app-title">📚 恒玥IFA内容库</h1>
  <div class="search-box" id="searchBox">
   <input type="text" id="searchInput" placeholder="🔍 搜索站内内容..." oninput="handleSearch(this.value)">
