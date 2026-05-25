@@ -93,3 +93,40 @@ mark.search-highlight { background: #fef08a; color: #92400e; padding: 1px 4px; b
 .modal-btn:hover { transform:scale(1.03);box-shadow:0 6px 20px rgba(201,168,76,0.4); }
 .modal-btn:active { transform:scale(0.98); }
 @media(max-width:375px){ .modal-box{margin:10px}.modal-title{font-size:18px} .modal-btn{font-size:15px;padding:12px 30px} }
+
+/* 密码锁屏 */
+.lock-overlay {
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(135deg,#0a1628 0%,#1a3a5c 50%,#0a1628 100%);
+  z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.lock-box {
+  background:#fff;border-radius:20px;
+  max-width:380px;width:100%;padding:40px 30px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  text-align:center;
+}
+.lock-icon { font-size:56px;margin-bottom:16px; }
+.lock-title { font-size:22px;color:#1a2937;font-weight:800;margin-bottom:6px; }
+.lock-subtitle { font-size:14px;color:#888;margin-bottom:24px; }
+.lock-input-row { margin-bottom:12px; }
+.lock-input {
+  width:100%;padding:14px 16px;font-size:28px;letter-spacing:10px;
+  text-align:center;border:2px solid #e0e0e0;border-radius:12px;
+  outline:none;transition:border-color 0.2s;box-sizing:border-box;
+  font-family:inherit;
+}
+.lock-input:focus { border-color:#c9a84c; }
+.lock-error {
+  font-size:13px;color:#e74c3c;margin-bottom:12px;height:18px;
+  visibility:hidden;
+}
+.lock-error.show { visibility:visible; }
+.lock-btn {
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#c9a84c,#e8c96a);color:#0a1628;
+  font-size:16px;font-weight:700;border:none;border-radius:12px;
+  cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
+}
+.lock-btn:hover { transform:scale(1.02);box-shadow:0 6px 20px rgba(201,168,76,0.4); }
+.lock-btn:active { transform:scale(0.98); }

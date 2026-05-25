@@ -682,3 +682,34 @@ function toggleMode() {
 function acceptDisclaimer(){localStorage.setItem("disclaimerAccepted","1"),document.getElementById("disclaimerModal").style.display="none"}
 function showDisclaimer(){var e=document.getElementById("disclaimerModal");"1"!==localStorage.getItem("disclaimerAccepted")?e.style.display="flex":e.style.display="none"}
 document.addEventListener("DOMContentLoaded",showDisclaimer);
+
+// 密码锁屏
+var SITE_PASSWORD = "8888";
+
+function checkPassword(){
+  var val = document.getElementById("lockInput").value;
+  if(val === SITE_PASSWORD){
+    localStorage.setItem("siteUnlocked","1");
+    document.getElementById("passwordLock").style.display = "none";
+    showDisclaimer();
+  } else {
+    var err = document.getElementById("lockError");
+    err.classList.add("show");
+    document.getElementById("lockInput").value = "";
+    setTimeout(function(){ err.classList.remove("show"); }, 2000);
+  }
+}
+
+document.getElementById("lockInput").addEventListener("keyup",function(e){
+  if(e.key==="Enter") checkPassword();
+});
+
+function showPasswordLock(){
+  if(localStorage.getItem("siteUnlocked")==="1"){
+    document.getElementById("passwordLock").style.display = "none";
+    showDisclaimer();
+  } else {
+    document.getElementById("passwordLock").style.display = "flex";
+  }
+}
+document.addEventListener("DOMContentLoaded",showPasswordLock);
