@@ -13,7 +13,6 @@ let viewStack = [{ view: 'home' }];
 
 function onChunkLoaded() {
   loadedChunks++;
-  console.log('[DEBUG] Chunk loaded, loadedChunks:', loadedChunks, '/', totalChunks);
   if (loadedChunks >= totalChunks) {
     renderCategories();
   }
@@ -223,8 +222,6 @@ document.addEventListener('click', function(e) {
 
 // ─── 渲染函数 ───
 function renderCategories() {
-  console.log('[DEBUG] renderCategories called, loadedChunks:', loadedChunks, 'total:', totalChunks);
-  console.log('[DEBUG] contentData.categories:', contentData.categories);
   var grid = document.getElementById('categoryGrid');
   if (!grid) return;
   grid.innerHTML = '';
