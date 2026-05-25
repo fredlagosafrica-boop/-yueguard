@@ -695,7 +695,6 @@ function checkPassword(){
   } else {
     var err = document.getElementById("lockError");
     err.classList.add("show");
-    document.getElementById("lockInput").value = "";
     setTimeout(function(){ err.classList.remove("show"); }, 2000);
   }
 }
