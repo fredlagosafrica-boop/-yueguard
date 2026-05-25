@@ -19,13 +19,7 @@ contentData.categories.push({
         {
           id: 'ref-1-2',
           name: '1.2 正规业务链路',
-          children: [
-            {
-              id: 'ref-1-2-1',
-              name: '1.2.1 考牌准备（保险中介人资格考试）',
-              content: '<h3>1.2.1 考牌准备（保险中介人资格考试）备考资源</h3><h4>📋 考试简介</h4><p>想加入香港保险行业成为合规的保险中介人，必须通过以下两场考试：</p><ul><li><strong>保险中介人资格考试</strong>（Insurance Intermediaries Qualifying Examination）</li><li><strong>强积金计划考试</strong>（Mandatory Provident Fund Schemes Examination）</li></ul><h4>🏫 考试机构</h4><p><strong>PEAK 高峰进修学院考试中心</strong>（VTC Group成员）</p><h4>🔗 核心链接</h4><ul><li>📝 <strong>考试报名：</strong><a href="https://www.peak.edu.hk/exam/econline/zh/" target="_blank" rel="noopener">高峰进修学院考试中心报名入口</a></li><li>📊 <strong>成绩查询/下载：</strong><a href="http://www.vtc.edu.hk/cpdc/tc/exam_select.php" target="_blank" rel="noopener">VTC成绩通知书下载页面</a></li></ul><h4>📍 联系方式</h4><ul><li><strong>地址：</strong>香港湾仔活道27号职业训练局大楼1楼</li><li><strong>电话：</strong>2919 1467 / 2919 1468 / 2919 1478</li><li><strong>邮箱：</strong>cpdc@vtc.edu.hk</li></ul><h4>📌 成绩通知书下载步骤</h4><ol><li>访问 <a href="http://www.vtc.edu.hk/cpdc/tc/exam_select.php" target="_blank" rel="noopener">VTC成绩通知书下载页面</a></li><li>选择考试类型（保险中介人资格考试 / 强积金计划考试）</li><li>输入考生编号等报名信息</li><li>下载并保存PDF版本，建议列印备份</li></ol><h4>🧮 考场允许使用计算器型号（部分）</h4><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%"><tr><th>品牌</th><th>允许型号（部分）</th></tr><tr><td>CASIO</td><td>fx-3650P, fx-50FH, fx-80 series</td></tr><tr><td>SHARP</td><td>EL-509, EL-531 series</td></tr><tr><td>CANON</td><td>LS-series, F-700 series</td></tr><tr><td>HEWLETT PACKARD</td><td>HP 10bII+</td></tr></table><p style="color:#888;font-size:13px">*详细型号清单请以官方最新公布为准</p><h4>✅ 考试后的下一步</h4><ol><li>向香港保险业监管局（IA）提交注册申请</li><li>准备学历及身份证明文件</li><li>挂靠合规的保险公司或保险经纪公司</li><li>持续完成每年规定的继续教育（CPD）学时</li></ol><p style="color:#888;font-size:13px">⚠️ 以上信息整理自PEAK/VTC官方公开渠道，具体政策请以官方最新公布为准。</p>'
-            }
-          ]
+          content: '<h3>1.2 正规业务链路</h3><p><strong>流程：</strong>客户 → 转介人（引流对接） → 香港持牌经纪/持牌顾问（合规服务） → 香港线下签单 → 保单核保生效 → 过法定冷静期 → 转介人结算转介费 → 售后维护及裂变</p><p><strong>核心原则：</strong>所有销售、咨询、核保、签单环节，必须由香港持牌人员完成，转介人仅承担"桥梁对接"角色，全程坚守合规边界。</p>'
         }
       ]
     },

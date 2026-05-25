@@ -5,163 +5,41 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>恒玥IFA内容库</title>
  <link rel="stylesheet" href="style.css">
- <style>
-  body { margin: 0; background: linear-gradient(135deg, #e0f2fe, #f0f9ff); min-height: 100vh; font-family: 'Microsoft YaHei', sans-serif; }
-  #loginScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-  .login-card { background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); padding: 48px 40px; max-width: 400px; width: 100%; text-align: center; }
-  .login-logo { font-size: 48px; margin-bottom: 16px; }
-  .login-title { font-size: 24px; font-weight: 700; color: #1e3a5f; margin-bottom: 8px; }
-  .login-sub { font-size: 14px; color: #666; margin-bottom: 32px; }
-  .login-input-wrap { position: relative; margin-bottom: 20px; }
-  .login-input { width: 100%; padding: 14px 16px; border: 2px solid #e8f4f8; border-radius: 12px; font-size: 16px; outline: none; box-sizing: border-box; transition: border-color 0.2s; font-family: 'Microsoft YaHei', sans-serif; }
-  .login-input:focus { border-color: #0284c7; }
-  .login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Microsoft YaHei', sans-serif; transition: all 0.2s; }
-  .login-btn:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(2,132,199,0.3); }
-  .login-btn:active { transform: scale(0.98); }
-  .login-error { color: #dc2626; font-size: 13px; margin-top: 12px; display: none; min-height: 18px; }
-  .login-footer { margin-top: 24px; font-size: 12px; color: #999; }
-  /* 免责声明弹窗 */
-  #disclaimerModal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9998; justify-content: center; align-items: center; padding: 20px; }
-  .disclaimer-box { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-  .disclaimer-header { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 20px 24px; border-radius: 16px 16px 0 0; display: flex; align-items: center; }
-  .disclaimer-header span { font-size: 24px; }
-  .disclaimer-header strong { font-size: 18px; font-weight: 600; margin-left: 10px; }
-  .disclaimer-body { padding: 24px; color: #333; line-height: 1.8; font-size: 14px; }
-  .disclaimer-body h3 { color: #1e40af; font-weight: 600; font-size: 15px; margin: 16px 0 10px; }
-  .disclaimer-body h3:first-child { margin-top: 0; }
-  .disclaimer-body p { margin-bottom: 14px; text-align: justify; }
-  .disclaimer-tip { background: #f0f9ff; border-left: 4px solid #0284c7; padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 13px; color: #0369a1; margin-top: 16px; }
-  .disclaimer-footer { padding: 0 24px 24px; text-align: center; }
-  .disclaimer-btn { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: none; padding: 14px 48px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(2,132,199,0.3); font-family: 'Microsoft YaHei', sans-serif; }
-  #appContent { display: none; }
- </style>
 </head>
 <body>
-
-<!-- 登录页 -->
-<div id="loginScreen">
- <div class="login-card">
-  <div class="login-logo">🔐</div>
-  <div class="login-title">恒玥IFA内容库</div>
-  <div class="login-sub">请输入访问密码</div>
-  <div class="login-input-wrap">
-   <input type="password" id="pwdInput" class="login-input" placeholder="请输入密码..." onkeydown="if(event.key==='Enter')doLogin()">
-  </div>
-  <button class="login-btn" onclick="doLogin()">登 入</button>
-  <div class="login-error" id="loginError">密码错误，请重试</div>
-  <div class="login-footer">恒玥 Yuanguard 团队 © 2026</div>
- </div>
-</div>
-
-<!-- 免责声明弹窗 -->
-<div id="disclaimerModal">
- <div class="disclaimer-box">
-  <div class="disclaimer-header">
-   <span>📋</span>
-   <strong>资料库使用声明及免责条款</strong>
-  </div>
-  <div class="disclaimer-body">
-   <h3>知识产权声明</h3>
-   <p>本资料库所有内容版权归本机构所有，受相关知识产权法律法规保护。未经本机构书面授权，任何单位及个人不得擅自复制、转载、篡改、传播、商用或以其他方式使用资料库内容。</p>
-   <h3>使用范围限制</h3>
-   <p>本资料库内容仅限香港地区合法持牌保险经纪人内部参考使用，严格禁止跨地域、超权限使用，亦不得向非合规人员、异地机构或第三方对外流转、分享资料内容。</p>
-   <h3>免责条款</h3>
-   <p>资料库所有内容仅作业务参考用途，不构成任何保险投保建议、法律意见、专业决策依据。任何使用者因超范围使用、自行依据资料内容开展业务所产生的一切纠纷、损失及相关法律责任，均由使用者自行全额承担，本机构不承担任何连带法律责任与相关后果。</p>
-   <div class="disclaimer-tip">如您使用本资料库，即表示已阅读、理解并同意上述全部条款。</div>
-  </div>
-  <div class="disclaimer-footer">
-   <button class="disclaimer-btn" onclick="acceptDisclaimer()">我已知悉并同意</button>
-  </div>
- </div>
-</div>
-
-<!-- 主内容（登录+声明后显示） -->
-<div id="appContent">
  <div class="app-container">
-  <h1 class="app-title">📚 恒玥IFA内容库</h1>
-  <div class="search-box" id="searchBox">
-   <input type="text" id="searchInput" placeholder="🔍 搜索站内内容..." oninput="handleSearch(this.value)">
-   <div class="search-results" id="searchResults"></div>
-  </div>
-  <div class="breadcrumb" id="breadcrumb">
-   <span class="breadcrumb-item" onclick="goHome()">首页</span>
-  </div>
-  <div class="nav-area" id="navArea">
-   <h2 class="section-title">选择分类</h2>
-   <div class="category-grid" id="categoryGrid"></div>
-  </div>
-  <div class="content-area" id="contentArea" style="display:none;">
-   <h2 class="section-title" id="contentTitle"></h2>
-   <div class="item-list" id="itemList"></div>
-  </div>
-  <div class="detail-area" id="detailArea" style="display:none;">
-   <button class="back-btn" onclick="goBack()">← 返回</button>
-   <div class="doc-header">
-    <h2 id="docTitle">文档标题</h2>
-    <div class="reading-progress"><span id="progressText">第 1 章</span></div>
-   </div>
-   <div class="doc-content" id="docContent"></div>
-   <div class="doc-footer">
-    <button class="font-size-btn" onclick="adjustFontSize(-1)">字号 -</button>
-    <button class="font-size-btn" onclick="adjustFontSize(1)">字号 +</button>
-    <button class="back-top-btn" onclick="scrollToTop()">回到顶部</button>
-   </div>
-  </div>
-  <button class="mode-toggle" id="modeToggle" onclick="toggleMode()">🌙</button>
+ <h1 class="app-title">📚 恒玥IFA内容库</h1>
+ <div class="search-box" id="searchBox">
+  <input type="text" id="searchInput" placeholder="🔍 搜索站内内容..." oninput="handleSearch(this.value)">
+  <div class="search-results" id="searchResults"></div>
  </div>
-</div>
-
-<script src="script_new.js?v=2026052420"></script>
-<script>
-// 登录验证（明文比对，简单可靠）
-var LOGIN_PASS = '8888'; // 四位数字密码
-
-function doLogin() {
-  var inputEl = document.getElementById('pwdInput');
-  if (!inputEl) { console.error('pwdInput not found'); return; }
-  var pwd = inputEl.value;
-  if (!pwd) {
-    document.getElementById('loginError').textContent = '请输入密码';
-    document.getElementById('loginError').style.display = 'block';
-    return;
-  }
-  if (pwd === LOGIN_PASS) {
-    sessionStorage.setItem('hengyu_logged_in', '1');
-    document.getElementById('loginScreen').style.display = 'none';
-    checkDisclaimer();
-  } else {
-    document.getElementById('loginError').textContent = '密码错误，请重试';
-    document.getElementById('loginError').style.display = 'block';
-    inputEl.value = '';
-    inputEl.focus();
-  }
-}
-
-function checkDisclaimer() {
-  if (sessionStorage.getItem('disclaimerAccepted')) {
-    showApp();
-  } else {
-    document.getElementById('disclaimerModal').style.display = 'flex';
-  }
-}
-
-function acceptDisclaimer() {
-  sessionStorage.setItem('disclaimerAccepted', '1');
-  document.getElementById('disclaimerModal').style.display = 'none';
-  showApp();
-}
-
-function showApp() {
-  document.getElementById('appContent').style.display = 'block';
-  if (typeof initApp === 'function') initApp();
-}
-
-(function() {
-  if (sessionStorage.getItem('hengyu_logged_in') === '1') {
-    document.getElementById('loginScreen').style.display = 'none';
-    checkDisclaimer();
-  }
-})();
-</script>
+ <div class="breadcrumb" id="breadcrumb">
+ <span class="breadcrumb-item" onclick="goHome()">首页</span>
+ </div>
+ <div class="nav-area" id="navArea">
+ <h2 class="section-title">选择分类</h2>
+ <div class="category-grid" id="categoryGrid"></div>
+ </div>
+ <div class="content-area" id="contentArea" style="display:none;">
+ <h2 class="section-title" id="contentTitle"></h2>
+ <div class="item-list" id="itemList"></div>
+ </div>
+ <div class="detail-area" id="detailArea" style="display:none;">
+ <button class="back-btn" onclick="goBack()">← 返回</button>
+ <div class="doc-header">
+ <h2 id="docTitle">文档标题</h2>
+ <div class="reading-progress"><span id="progressText">第 1 章</span></div>
+ </div>
+ <div class="doc-content" id="docContent"></div>
+ <div class="doc-footer">
+ <button class="font-size-btn" onclick="adjustFontSize(-1)">字号 -</button>
+ <button class="font-size-btn" onclick="adjustFontSize(1)">字号 +</button>
+ <button class="back-top-btn" onclick="scrollToTop()">回到顶部</button>
+ </div>
+ </div>
+ <button class="mode-toggle" id="modeToggle" onclick="toggleMode()">🌙</button>
+ </div>
+ <script src="script_new.js?v=2026052320"></script>
+<!-- rebuilt -->
 </body>
 </html>
