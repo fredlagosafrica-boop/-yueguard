@@ -699,5 +699,5 @@ document.getElementById("lockInput").addEventListener("keyup",function(e){
   if(e.key==="Enter") checkPassword();
 });
 document.addEventListener("DOMContentLoaded",function(){
-  document.getElementById("passwordLock").style.display = "flex";
+  // 锁屏由HTML内联style="display:flex"控制，这里仅在密码正确时隐藏
 });
