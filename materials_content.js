@@ -38,7 +38,20 @@ contentData.categories.push({
       id: 'content04',
       name: '3.4 综合题材',
       children: [
-        { id: 'content04a', title: '3.4.1 2025年', content: '<h2>3.4.1 2025年综合题材</h2><p>内容待补充...</p>' },
+        { 
+          id: 'content04a', 
+          name: '3.4.1 2025年', 
+          children: [
+            { id: 'content04a_01', title: '3.4.1.1 5月', content: '<h2>3.4.1.1 5月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_02', title: '3.4.1.2 6月', content: '<h2>3.4.1.2 6月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_03', title: '3.4.1.3 7月', content: '<h2>3.4.1.3 7月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_04', title: '3.4.1.4 8月', content: '<h2>3.4.1.4 8月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_05', title: '3.4.1.5 9月', content: '<h2>3.4.1.5 9月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_06', title: '3.4.1.6 10月', content: '<h2>3.4.1.6 10月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_07', title: '3.4.1.7 11月', content: '<h2>3.4.1.7 11月综合题材</h2><p>内容待补充...</p>' },
+            { id: 'content04a_08', title: '3.4.1.8 12月', content: '<h2>3.4.1.8 12月综合题材</h2><p>内容待补充...</p>' }
+          ] 
+        },
         { id: 'content04b', title: '3.4.2 2026年', content: '<h2>3.4.2 2026年综合题材</h2><p>内容待补充...</p>' },
         { id: 'content04c', title: '3.4.3 2027年', content: '<h2>3.4.3 2027年综合题材</h2><p>内容待补充...</p>' }
       ]
