@@ -680,36 +680,69 @@ function toggleMode() {
 
 // 声明弹窗
 function acceptDisclaimer(){
-  localStorage.setItem("disclaimerAccepted","1");
-  document.getElementById("disclaimerModal").style.display = "none";
+  document.getElementById("disclaimerModal").classList.remove("active");
 }
 function showDisclaimer(){
-  var e = document.getElementById("disclaimerModal");
-  // 仅在密码正确后、未点过同意时弹出
-  if(localStorage.getItem("disclaimerAccepted") !== "1"){
-    e.style.display = "flex";
-  } else {
-    e.style.display = "none";
-  }
+  document.getElementById("disclaimerModal").classList.add("active");
 }
 
-// 密码锁屏（每次访问都需要输入，不记住）
+// 密码锁屏
+var SITE_PASSWORD = "8888";
+
+function getDigitValues(){
+  var boxes = document.querySelectorAll(".lock-digit-box");
+  var val = "";
+  boxes.forEach(function(b){ val += b.value; });
+  return val;
+}
+
 function checkPassword(){
-  var val = document.getElementById("lockInput").value;
-  if(val === "8888"){
+  var val = getDigitValues();
+  if(val.length < 4) return;
+  if(val === SITE_PASSWORD){
+    localStorage.setItem("siteUnlocked","1");
     document.getElementById("passwordLock").style.display = "none";
-    // 每次输入正确密码后都弹出声明
-    localStorage.removeItem("disclaimerAccepted");
     showDisclaimer();
   } else {
     var err = document.getElementById("lockError");
     err.classList.add("show");
-    setTimeout(function(){ err.classList.remove("show"); }, 2000);
+    var boxes = document.querySelectorAll(".lock-digit-box");
+    boxes.forEach(function(b){ b.value = ""; b.classList.remove("filled"); });
+    boxes[0].focus();
+    setTimeout(function(){ err.classList.remove("show"); }, 2500);
   }
 }
-document.getElementById("lockInput").addEventListener("keyup",function(e){
-  if(e.key==="Enter") checkPassword();
-});
+
+// 4格独立输入
 document.addEventListener("DOMContentLoaded",function(){
-  // 锁屏由HTML内联style="display:flex"控制，这里仅在密码正确时隐藏
+  var boxes = document.querySelectorAll(".lock-digit-box");
+  boxes.forEach(function(box, idx){
+    box.addEventListener("input",function(e){
+      var v = this.value.replace(/[^0-9]/g,"").slice(-1);
+      this.value = v;
+      if(v && idx < boxes.length - 1){
+        boxes[idx+1].focus();
+        boxes[idx+1].classList.add("filled");
+      }
+      if(v) this.classList.add("filled");
+    });
+    box.addEventListener("keydown",function(e){
+      if(e.key === "Backspace" && !this.value && idx > 0){
+        boxes[idx-1].focus();
+        boxes[idx-1].classList.remove("filled");
+        boxes[idx-1].value = "";
+      }
+    });
+    box.addEventListener("focus",function(){
+      this.select();
+    });
+  });
+  // 回车提交
+  boxes[boxes.length-1].addEventListener("keydown",function(e){
+    if(e.key === "Enter") checkPassword();
+  });
 });
+
+function showPasswordLock(){
+  document.getElementById("passwordLock").style.display = "flex";
+}
