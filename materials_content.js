@@ -58,7 +58,7 @@ contentData.categories.push({
     },
     {
       id: 'content05',
-      name: '3.5 LifeBee APP 操作说明',
+      name: '3.5 恒玥工具汇总',
       children: [
         { 
           id: 'content05a', 
