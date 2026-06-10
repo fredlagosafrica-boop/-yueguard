@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIQE 刷题系统 - 恒玥 Yuanguard</title>
+  <style>
+    :root {
+      --primary: #1e3a5f;
+      --gold: #c9a84c;
+      --bg: #f5f6fa;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --text2: #666;
+      --wrong: #e74c3c;
+      --right: #27ae60;
+      --border: #dde1ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body.night { --bg: #1a1a2e; --card: #252540; --text: #e8e8f0; --text2: #999; --border: #3a3a5c; }
+
+    .app-header { background: var(--primary); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .app-header h1 { font-size: 18px; font-weight: 600; }
+    .app-header .sub { font-size: 13px; opacity: 0.8; }
+    .night-toggle { background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+    .night-toggle:hover { background: rgba(255,255,255,0.1); }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 16px; }
+
+    /* 首页 */
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .paper-card { background: var(--card); border-radius: 12px; padding: 20px; cursor: pointer; border: 2px solid var(--border); transition: all 0.2s; }
+    .paper-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .paper-card .paper-name { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+    .paper-card .paper-sub { font-size: 12px; color: var(--text2); margin-bottom: 10px; }
+    .paper-card .stat { font-size: 12px; color: var(--gold); font-weight: 600; }
+    body.night .paper-card .paper-name { color: var(--gold); }
+    .paper-card.full { grid-column: 1/-1; }
+
+    /* 设置面板 */
+    .settings-panel { background: var(--card); border-radius: 12px; margin-top: 16px; padding: 20px; border: 1px solid var(--border); }
+    .settings-panel h3 { font-size: 14px; color: var(--text2); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 14px; }
+    .setting-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    input[type="number"], input[type="date"], select { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--text); font-size: 14px; width: 120px; }
+    input[type="number"] { width: 70px; }
+
+    /* 开关 */
+    .toggle-switch { position: relative; width: 44px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border); border-radius: 24px; transition: 0.3s; }
+    .toggle-slider:before { position: absolute; content: ""; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+    .toggle-switch input:checked + .toggle-slider { background: var(--gold); }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+    /* 做题页面 */
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .quiz-info { font-size: 13px; color: var(--text2); }
+    .quiz-info span { color: var(--gold); font-weight: 700; }
+    .quiz-progress-bar { height: 4px; background: var(--border); border-radius: 4px; margin-bottom: 20px; }
+    .quiz-progress-fill { height: 100%; background: var(--gold); border-radius: 4px; transition: width 0.3s; width: 0%; }
+    .question-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 16px; }
+    .question-meta { font-size: 12px; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .question-text { font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: 10px; border: 2px solid var(--border); cursor: pointer; transition: all 0.2s; font-size: 14px; line-height: 1.5; }
+    .option:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+    .option.selected { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+    .option.correct { border-color: var(--right); background: rgba(39,174,96,0.1); }
+    .option.wrong { border-color: var(--wrong); background: rgba(231,76,60,0.1); }
+    .option-letter { min-width: 24px; height: 24px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .option.selected .option-letter { background: var(--gold); color: white; }
+    .option.correct .option-letter { background: var(--right); color: white; }
+    .option.wrong .option-letter { background: var(--wrong); color: white; }
+    .answer-feedback { margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 13px; line-height: 1.6; display: none; }
+    .answer-feedback.show { display: block; }
+    .answer-feedback.correct { background: rgba(39,174,96,0.1); border-left: 4px solid var(--right); color: var(--right); }
+    .answer-feedback.wrong { background: rgba(231,76,60,0.1); border-left: 4px solid var(--wrong); color: var(--wrong); }
+
+    /* 操作按钮 */
+    .quiz-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .btn { padding: 10px 20px; border-radius: 10px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--gold); color: #0a1628; }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--gold); }
+    .btn-danger { background: var(--wrong); color: white; }
+    .btn-full { width: 100%; }
+
+    /* 结果页 */
+    .result-card { background: var(--card); border-radius: 12px; padding: 30px; text-align: center; border: 1px solid var(--border); }
+    .result-score { font-size: 48px; font-weight: 800; color: var(--primary); margin: 10px 0; }
+    body.night .result-score { color: var(--gold); }
+    .result-label { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+    .result-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+    .stat-box { background: var(--bg); border-radius: 10px; padding: 14px; }
+    .stat-box .num { font-size: 22px; font-weight: 800; }
+    .stat-box .label { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .stat-box.right .num { color: var(--right); }
+    .stat-box.wrong .num { color: var(--wrong); }
+    .stat-box.skip .num { color: var(--text2); }
+
+    /* 导航栏 */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 8px 0; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+    .nav-item { flex: 1; text-align: center; cursor: pointer; padding: 6px; }
+    .nav-item .nav-icon { font-size: 22px; display: block; }
+    .nav-item .nav-label { font-size: 11px; margin-top: 3px; color: var(--text2); }
+    .nav-item.active .nav-label { color: var(--gold); font-weight: 600; }
+    .nav-item.active .nav-icon { transform: scale(1.1); }
+
+    .screen { display: none; }
+    .screen.active { display: block; padding-bottom: 80px; }
+
+    .section-title { font-size: 15px; color: var(--text2); margin: 20px 0 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* 题目列表 */
+    .question-list-item { background: var(--card); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid var(--border); }
+    .q-num { min-width: 32px; height: 32px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .q-num.done-right { background: var(--right); color: white; }
+    .q-num.done-wrong { background: var(--wrong); color: white; }
+    .q-num.done-skip { background: var(--border); color: var(--text2); }
+    .q-num.current { background: var(--gold); color: #0a1628; }
+    .q-preview { font-size: 13px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .q-status { font-size: 12px; color: var(--text2); }
+
+    .back-btn { background: none; border: none; color: var(--text2); font-size: 14px; cursor: pointer; padding: 8px 0; display: flex; align-items: center; gap: 4px; }
+    .back-btn:hover { color: var(--gold); }
+
+    /* 题目卡片样式 */
+    .q-type-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; background: rgba(201,168,76,0.15); color: var(--gold); margin-left: 8px; }
+
+    /* 统计页 */
+    .stat-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 12px; }
+    .stat-card h4 { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
+    .mini-stat { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .mini-stat:last-child { border-bottom: none; }
+    .mini-stat .val { font-weight: 700; color: var(--gold); }
+
+    .filter-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .filter-tab { padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid var(--border); cursor: pointer; background: var(--bg); color: var(--text2); }
+    .filter-tab.active { background: var(--gold); color: #0a1628; border-color: var(--gold); font-weight: 600; }
+
+    .timer { font-size: 14px; color: var(--text2); font-weight: 600; }
+    .timer.warning { color: var(--wrong); }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>📚 IIQE 刷题系统</h1>
+      <div class="sub">恒玥 Yuanguard · 保险中介人资格考试</div>
+    </div>
+    <button class="night-toggle" onclick="toggleNight()">🌙</button>
+  </header>
+
+  <!-- 首页：选择卷子 -->
+  <div class="screen active" id="screen-home">
+    <div class="container">
+      <div class="section-title">选择卷别开始练习</div>
+      <div class="home-grid">
+        <div class="paper-card" onclick="startQuiz(1)">
+          <div class="paper-name">📝 卷一 Paper1</div>
+          <div class="paper-sub">保险原理及实务</div>
+          <div class="stat" id="stat-paper1">点击开始练习 →</div>
+        </div>
+        <div class="paper-card" onclick="startQuiz(2)">
+          <div class="paper-name">📝 卷二 Paper 2</div>
+          <div class="paper-sub">一般保险</div>
+          <div class="stat" id="stat-paper2">点击开始练习 →</div>
+        </div>
+        <div class="paper-card" onclick="startQuiz(3)">
+          <div class="paper-name">📝 卷三 Paper 3</div>
+          <div class="paper-sub">人寿保险</div>
+          <div class="stat" id="stat-paper3">点击开始练习 →</div>
+        </div>
+        <div class="paper-card" onclick="startQuiz(4)">
+          <div class="paper-name">📝 卷四 Paper 4</div>
+          <div class="paper-sub">强积金 MPF</div>
+          <div class="stat" id="stat-paper4">点击开始练习 →</div>
+        </div>
+        <div class="paper-card" onclick="startQuiz(5)">
+          <div class="paper-name">📝 卷五 Paper 5</div>
+          <div class="paper-sub">投连险 ILAS</div>
+          <div class="stat" id="stat-paper5">点击开始练习 →</div>
+        </div>
+        <div class="paper-card full" onclick="showScreen('screen-wrong')">
+          <div class="paper-name">🔁 错题重练</div>
+          <div class="paper-sub">集中攻克你的易错题</div>
+          <div class="stat" id="stat-wrong">查看错题 →</div>
+        </div>
+      </div>
+
+      <!-- 设置面板 -->
+      <div class="settings-panel">
+        <h3>⚙️ 题库设置</h3>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">随机练习题数</div>
+            <div class="setting-desc">设为0则练习全部题目</div>
+          </div>
+          <input type="number" id="setting-count" value="20" min="0" max="300">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">自动下一题</div>
+            <div class="setting-desc">答对后自动跳下一题</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-auto" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">自动保存答案</div>
+            <div class="setting-desc">仅练习模式有效</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-save" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">显示答案解析</div>
+            <div class="setting-desc">答题后展示解析内容</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-explain" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">字体大小</div>
+          </div>
+          <select id="setting-fontsize" onchange="changeFontSize(this.value)">
+            <option value="13">小</option>
+            <option value="14" selected>中</option>
+            <option value="16">大</option>
+            <option value="18">特大</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">考试日期</div>
+            <div class="setting-desc">设置考试日期，查看倒计时</div>
+          </div>
+          <input type="date" id="setting-examdate">
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">清空所有记录</div>
+          </div>
+          <button class="btn btn-danger" style="padding:6px 14px;font-size:13px;" onclick="clearAllRecords()">清空</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 做题页面 -->
+  <div class="screen" id="screen-quiz">
+    <div class="container">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="confirmExit()">← 返回</button>
+        <div class="quiz-info">
+          <span id="quiz-num">1</span> / <span id="quiz-total">20</span>
+          <span class="timer" id="quiz-timer"></span>
+        </div>
+      </div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress"></div></div>
+
+      <div class="question-card">
+        <div class="question-meta" id="q-meta"></div>
+        <div class="question-text" id="q-text"></div>
+        <div class="options" id="q-options"></div>
+        <div class="answer-feedback" id="q-feedback"></div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">← 上一题</button>
+        <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()" disabled>提交答案 →</button>
+      </div>
+     <div style="margin-top:10px;">
+        <button class="btn btn-secondary" style="font-size:13px;padding:8px 14px;" onclick="showScreen('screen-list')">📋 题目列表</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 题目列表页 -->
+  <div class="screen" id="screen-list">
+    <div class="container">
+      <button class="back-btn" onclick="showScreen('screen-quiz')">← 返回做题</button>
+      <div class="filter-tabs" id="filter-tabs"></div>
+      <div id="qlist-container"></div>
+    </div>
+  </div>
+
+  <!-- 结果页 -->
+  <div class="screen" id="screen-result">
+    <div class="container">
+      <div class="result-card">
+        <div style="font-size:14px;color:var(--text2);">本次练习结果</div>
+        <div class="result-score" id="result-score">0</div>
+        <div class="result-label" id="result-percent">正确率 0%</div>
+        <div class="result-stats">
+          <div class="stat-box right">
+            <div class="num" id="result-right">0</div>
+            <div class="label">答对</div>
+          </div>
+          <div class="stat-box wrong">
+            <div class="num" id="result-wrong">0</div>
+            <div class="label">答错</div>
+          </div>
+          <div class="stat-box skip">
+            <div class="num" id="result-skip">0</div>
+            <div class="label">未答</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <button class="btn btn-primary" onclick="restartQuiz()">🔄 再练一次</button>
+          <button class="btn btn-secondary" onclick="showScreen('screen-home')">🏠 返回首页</button>
+          <button class="btn btn-danger" onclick="retryWrongOnly()">🔁 只练错题</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 错题页 -->
+  <div class="screen" id="screen-wrong">
+    <div class="container">
+      <button class="back-btn" onclick="showScreen('screen-home')">← 返回首页</button>
+      <div class="section-title">🔁 错题重练</div>
+      <div id="wrong-list"></div>
+    </div>
+  </div>
+
+ <script src="quiz_data.js"></script>
+  <script src="quiz_app.js"></script>
+</body>
+</html>
