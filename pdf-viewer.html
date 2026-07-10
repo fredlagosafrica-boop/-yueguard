@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title id="page-title">PDF 预览</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #1a1a2e; color: #fff; min-height: 100vh;
+    }
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; height: 56px;
+      background: rgba(26,26,46,0.95); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .header .back { color: #4a9eff; font-size: 16px; cursor: pointer; text-decoration: none; }
+    .header .title { font-size: 17px; font-weight: 600; flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
+    .header .dl-btn { background: #4a9eff; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+
+    .content { padding-top: 56px; }
+    .preview-img { width: 100%; display: block; background: #fff; }
+    .page-label { text-align: center; padding: 12px; color: #888; font-size: 14px; background: #1a1a2e; }
+    .download-section { padding: 20px; background: #2a2a4e; margin-top: 0; }
+    .download-btn { display: block; width: 100%; background: #4a9eff; color: #fff; text-decoration: none; padding: 16px; border-radius: 12px; font-size: 17px; font-weight: 600; text-align: center; box-sizing: border-box; }
+    .download-btn:hover { background: #3a8eef; }
+    .tip { margin-top: 12px; font-size: 13px; color: #888; line-height: 1.8; }
+    .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; color: #aaa; z-index: 999; }
+    .loading .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #4a9eff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; color: #ff6b6b; padding: 20px; z-index: 999; white-space: pre-wrap; max-width: 90%; }
+    .page-divider { height: 6px; background: #2a2a4e; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="javascript:void(0)" onclick="goBack()" class="back">← 返回</a>
+    <div class="title" id="doc-title">PDF 预览</div>
+    <button class="dl-btn" id="dl-btn" onclick="downloadFile()">下载</button>
+  </div>
+
+  <div class="content">
+    <!-- 多页预览图容器，由 JS 动态填充 -->
+    <div id="preview-area"></div>
+
+    <!-- 下载区域 -->
+    <div class="download-section">
+      <a class="download-btn" id="dl-link" href="#" download>🔽 下载 PDF 文件</a>
+      <div class="tip">💡 若微信无法下载：点右上角 ┆ → 复制链接 → 用 Safari/Chrome 打开下载</div>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div>正在生成预览...</div>
+  </div>
+
+  <div class="error-msg" id="error" style="display:none"></div>
+
+  <!-- PDF.js：内嵌不依赖CDN -->
+  <script>var pdfjsLib=null, pdfDoc=null;</script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.bootcdn.net/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+
+  <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    var PDF_URL = urlParams.get('url') || '';
+    var PAGE_TITLE = decodeURIComponent(urlParams.get('title') || '文档');
+
+    document.getElementById('page-title').textContent = PAGE_TITLE + ' - PDF 预览';
+    document.getElementById('doc-title').textContent = PAGE_TITLE;
+    document.getElementById('dl-link').download = PAGE_TITLE + '.pdf';
+    document.getElementById('dl-link').href = PDF_URL;
+
+    function goBack() {
+      if (document.referrer && document.referrer.indexOf(window.location.hostname) !== -1) {
+        history.back();
+      } else {
+        window.close();
+      }
+    }
+
+    function downloadFile() {
+      window.open(PDF_URL, '_blank');
+    }
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
+
+    // 渲染指定页为图片，并插入预览区
+    function renderPage(doc, pageNum, totalPages, previewArea) {
+      return doc.getPage(pageNum).then(function(page) {
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var scale = 2; // 2倍清晰度
+        var viewport = page.getViewport({ scale: scale });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() {
+          // 页码标签（顶部）
+          if (pageNum === 1) {
+            var topLabel = document.createElement('div');
+            topLabel.className = 'page-label';
+            topLabel.textContent = '共 ' + totalPages + ' 页 · 第 ' + pageNum + ' / ' + totalPages + ' 页';
+            previewArea.appendChild(topLabel);
+          }
+          // 图片
+          var img = document.createElement('img');
+          img.className = 'preview-img';
+          img.src = canvas.toDataURL('image/jpeg', 0.85);
+          img.style.display = 'block';
+          img.alt = '第 ' + pageNum + ' 页';
+          previewArea.appendChild(img);
+          // 页码标签（底部）
+          var bottomLabel = document.createElement('div');
+          bottomLabel.className = 'page-label';
+          if (pageNum < totalPages) {
+            bottomLabel.textContent = '↓ 第 ' + (pageNum + 1) + ' / ' + totalPages + ' 页';
+            previewArea.appendChild(bottomLabel);
+            // 分隔条
+            var divider = document.createElement('div');
+            divider.className = 'page-divider';
+            previewArea.appendChild(divider);
+          } else {
+            bottomLabel.textContent = '✓ 已显示全部 ' + totalPages + ' 页';
+          }
+        });
+      });
+    }
+
+    if (!PDF_URL) {
+      showError('错误：未指定 PDF 地址\n\n请使用：\npdf-viewer.html?url=PDF链接&title=标题');
+    } else {
+      var previewArea = document.getElementById('preview-area');
+
+      pdfjsLib.getDocument(PDF_URL).promise.then(function(doc) {
+        pdfDoc = doc;
+        var totalPages = doc.numPages;
+        var promises = [];
+        for (var i = 1; i <= totalPages; i++) {
+          promises.push(renderPage(doc, i, totalPages, previewArea));
+        }
+        return Promise.all(promises);
+      }).then(function() {
+        document.getElementById('loading').style.display = 'none';
+      }).catch(function(err) {
+        // 微信无法加载 PDF.js，降级显示下载卡片
+        document.getElementById('loading').style.display = 'none';
+        previewArea.innerHTML =
+          '<div style="padding:60px 20px;text-align:center;color:#888">' +
+          '<div style="font-size:60px;margin-bottom:16px">📄</div>' +
+          '<div style="font-size:16px;margin-bottom:8px">' + PAGE_TITLE + '</div>' +
+          '<div style="font-size:14px;color:#666">点击下方按钮下载文件</div>' +
+          '</div>';
+      });
+    }
+  </script>
+
+</body>
+</html>
