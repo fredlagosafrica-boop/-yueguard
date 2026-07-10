@@ -93,7 +93,7 @@
       document.getElementById('error').textContent = msg;
     }
 
-    // 渲染指定页为图片，并插入预览区
+    // 渲染指定页为图片，并插入预览区（顺序由调用方控制）
     function renderPage(doc, pageNum, totalPages, previewArea) {
       return doc.getPage(pageNum).then(function(page) {
         var canvas = document.createElement('canvas');
@@ -103,7 +103,7 @@
         canvas.width = viewport.width;
         canvas.height = viewport.height;
         return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function() {
-          // 页码标签（顶部）
+          // 页码标签（顶部，仅第 1 页显示）
           if (pageNum === 1) {
             var topLabel = document.createElement('div');
             topLabel.className = 'page-label';
@@ -139,14 +139,22 @@
     } else {
       var previewArea = document.getElementById('preview-area');
 
+      // 串行渲染：必须保证页面按 1→N 顺序追加到 DOM。
+      // 之前用 Promise.all 并行 + appendChild 在 promise 内调用，
+      // 当页面大小/复杂度不一时，渲染完成顺序 ≠ 提交顺序，导致显示颠倒。
+      // 改用 then 链强制串行执行：前一个页 appendChild 完成才进入下一页。
       pdfjsLib.getDocument(PDF_URL).promise.then(function(doc) {
         pdfDoc = doc;
         var totalPages = doc.numPages;
-        var promises = [];
+        var chain = Promise.resolve();
         for (var i = 1; i <= totalPages; i++) {
-          promises.push(renderPage(doc, i, totalPages, previewArea));
+          (function(pageNum) {
+            chain = chain.then(function() {
+              return renderPage(doc, pageNum, totalPages, previewArea);
+            });
+          })(i);
         }
-        return Promise.all(promises);
+        return chain;
       }).then(function() {
         document.getElementById('loading').style.display = 'none';
       }).catch(function(err) {
