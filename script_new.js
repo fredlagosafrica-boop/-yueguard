@@ -28,7 +28,7 @@ var scripts = [
   'chatbot_content.js?v=20260516',
   'biyuan_content.js?v=2026052301',
   // [2026-07-10] 第8个一级分类：港险产品资料库（香港各主流保司产品介绍·对比）
-  'products_content.js?v=20260710',
+  'products_content.js?v=20260712',
 ];
 
 function loadScript(i) {
